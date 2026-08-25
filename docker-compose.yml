@@ -1,0 +1,19 @@
+services:
+  shop:
+    build: .
+    ports: ["8000:8000"]
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - shop-data:/app/data
+      - shop-products:/app/products/approved
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+volumes:
+  shop-data:
+  shop-products:
+
