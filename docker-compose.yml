@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: [.env]
+    environment:
+      DATABASE_URL: sqlite:////app/data/money_maker.db
+      PRODUCT_STORAGE_PATH: /app/products/approved
+    ports: ["8000:8000"]
+    volumes: ["shop-data:/app/data", "product-data:/app/products"]
+    healthcheck:
+      test: ["CMD","python","-c","import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args: {NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000"}
+    environment: {API_BASE_URL: "http://backend:8000"}
+    ports: ["3000:3000"]
+    depends_on:
+      backend: {condition: service_healthy}
+volumes:
+  shop-data:
+  product-data:
