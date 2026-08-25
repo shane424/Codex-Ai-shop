@@ -1,0 +1,1 @@
+export default function Success(){return <div className="card"><h1 className="text-3xl font-bold">Payment received</h1><p>Your authorized download link is created after Stripe confirms payment. Keep the link private; it expires and has a download limit. Local mock checkout is clearly non-payment and does not fulfill an order.</p></div>}
